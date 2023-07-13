@@ -1,0 +1,6 @@
+{
+    "topics" : "List {} most important topics for a {} presentation about {}. Express each topic as a prompt for a search engine.  Format the output as json list",
+    "bingTopic" : "I am working on {} presentation about {}. Find detailed infromation about {}. Don't give links for more information and further reading.",
+    "bingContinue" : "Now find information about {}. Don't give links for more information and further reading.",
+    "final" : "```{}```\n \n From information in triple backticks create exhaustive {} presentation about {}. Don't add any information, which is not mentioned in the backticks. The presentation must be divided into slides. Each slide must have name and must contain 5 - 10 short items and each item can't have more than 15 words. Write only specific information, which relates to the topic. Don't summarize anything and write exhaustive information instead. The presentation should be long. Format the presentation as markdown."
+}
