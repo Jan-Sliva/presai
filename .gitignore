@@ -162,4 +162,5 @@ cython_debug/
 
 # Tokens
 .ChatGPTtoken
+.DeepLtoken
 central asia
