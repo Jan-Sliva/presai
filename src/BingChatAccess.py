@@ -1,5 +1,6 @@
 from ChatGPTlike import ChatGPTlike
 from EdgeGPT.EdgeGPT import Chatbot, ConversationStyle
+import json, time
 
 class BingChatAccess(ChatGPTlike):
 
@@ -16,11 +17,13 @@ class BingChatAccess(ChatGPTlike):
         tries = 0
         while tries < self.numberOfTries:
             try:
+                ## cookies = json.loads(open("cookie.json", encoding="utf-8").read())
                 self.chatbots.append(await Chatbot.create())
                 self.convs.append([])
                 return len(self.convs)-1
             except:
                 tries+=1
+                time.sleep(1)
         raise ConnectionError("unable to start new chat")
 
     async def answerPropt(self, prompt, minimumTokens, convIndex=-1, newConv=False):
@@ -43,11 +46,13 @@ class BingChatAccess(ChatGPTlike):
                             conversation_style=self.style, 
                             simplify_response=True)
                 break
-            except:
+            except Exception as e:
+                print(e)
                 tries+=1
                 if tries >= self.numberOfTries:
                     raise ConnectionError("unable to get chat response")
                 print("BingChat: The try wasn't succesful, trying again")
+                time.sleep(1)
 
         self.convs[convIndex].append({"role": "assistant", "content": ' '.join([ret["text"], ret["sources_text"], *ret["suggestions"]])})        
         

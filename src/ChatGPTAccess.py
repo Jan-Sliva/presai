@@ -15,13 +15,14 @@ class ChatGPTAccess(ChatGPTlike):
         self.convs.append([])
         return len(self.convs)-1
     
-    def answerPropt(self, prompt, minimumTokens, convIndex=-1, newConv=False, temp=0.5):
+    def answerPropt(self, prompt, minimumTokens, convIndex=-1, newConv=False, temp=0.5, model=None):
         if newConv:
             self.addConv()
             convIndex = -1
         self.convs[convIndex].append({"role": "user", "content": prompt})
 
-        model = self.chooseModelAndShorten(convIndex, minimumTokens)
+        if model == None:
+            model = self.chooseModelAndShorten(convIndex, minimumTokens)
         print("ChatGPT: Using: " + model)
 
         tries = 0
