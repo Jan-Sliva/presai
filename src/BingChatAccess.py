@@ -1,17 +1,25 @@
-from ChatGPTlike import ChatGPTlike
 from EdgeGPT.EdgeGPT import Chatbot, ConversationStyle
 import json, time
+import LLMAccess, presaiUtils
 
-class BingChatAccess(ChatGPTlike):
+class BingChatAccess(LLMAccess):
 
     def __init__(self, numberOfTries=5):
-        super().__init__(numberOfTries)
+        self.numberOfTries = numberOfTries
         self.style = ConversationStyle.creative
 
         # I assume that Bing chat uses GPT-4
         self.possibleModels = [["gpt-4", 4_096]]
 
         self.chatbots = []
+
+    def chooseModel(self, convIndex, minimumTokens):
+        for model, limit in self.possibleModels:
+            tokens = presaiUtils.num_tokens_from_messages(self.convs[convIndex], model)
+            print(model + " tokens: " + str(tokens) + ", maximum " + str(limit) + " - " + str(minimumTokens))
+            if minimumTokens <= limit - tokens:
+                return model
+        return None
 
     async def addConv(self):
         tries = 0
@@ -26,7 +34,7 @@ class BingChatAccess(ChatGPTlike):
                 time.sleep(1)
         raise ConnectionError("unable to start new chat")
 
-    async def answerPropt(self, prompt, minimumTokens, convIndex=-1, newConv=False):
+    async def answerPrompt(self, prompt, minimumTokens, convIndex=-1, newConv=False):
         if newConv:
             await self.addConv()
             convIndex = -1
@@ -68,3 +76,7 @@ class BingChatAccess(ChatGPTlike):
             if (len(words) < 2) or (len(words[0]) == 0) or (words[0][0] != "["):
                 return ret
             ret.append(words[1])
+
+class BingChatConversation:
+       
+
