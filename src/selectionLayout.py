@@ -21,6 +21,13 @@ class selectionLayout(QtWidgets.QVBoxLayout):
 
         self.addWidget(button)
 
+    def addLabel(self, text, fontSize):
+        w = QLabel(text)
+        font = w.font()
+        font.setPointSize(fontSize)
+        w.setFont(font)
+        self.addWidget(w)
+
     def addSelection(self, selectionList, onChanged = None, triggerOnce = False):
         selectionOutputs = {}
 
@@ -63,11 +70,7 @@ class selectionLayout(QtWidgets.QVBoxLayout):
                 self.addLayout(sub_layout)
 
             elif item["type"] == "text":
-                w = QLabel(item["text"])
-                font = w.font()
-                font.setPointSize(item["fontSize"])
-                w.setFont(font)
-                self.addWidget(w)
+                self.addLabel(item["text"], item["fontSize"])
 
         if triggerOnce:
             f()
