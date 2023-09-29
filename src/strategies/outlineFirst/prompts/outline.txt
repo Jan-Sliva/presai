@@ -1,0 +1,12 @@
+Create outline for {adj} presentation about {top}. {foc} For each slide write only brief desriptive name. There has to be at least {len} slides. Format the list as json. Do not write anything before or after the json list. The structure of the json has to be
+
+{{
+"slides":[
+"<name of slide 1>",
+"<name of slide 2>",
+"<name of slide 3>",
+"<name of slide 4>,"
+...
+"<name of slide N>"
+]
+}}

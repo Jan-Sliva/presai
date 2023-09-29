@@ -1,0 +1,24 @@
+Already created slides:
+```
+{createdSlides}
+```
+
+Outline:
+```
+{outline}
+```
+
+I am working on {adj} presentation about {top}. Above, in triple backticks, you can see its outline and the already created slides. Each bullet point in the outline corresponds to one slide. Now, let's create one slide for the presentation. The topic of the slide is "{topOfSlide}". The slide must have a title and should contain {pointsMin}-{pointsMax} short bullet points. Each bullet point should not exceed one sentence. If there's more information that can't be covered in one short sentence, then use bullet subpoints. Write only specific information that relates to the topic. Do not repeat information that was already mentioned in the above slides. Format the slide as described below. Do not write any text before or after the slide.
+
+Format of the slide:
+
+## {topOfSlide}
+- <bullet point 1>
+- <bullet point 2>
+    - <possible subpoint 1>
+    - <possible subpoint 2>
+    ...
+    - <possible subpoint N>
+- <bullet point 3>
+...
+- <bullet point N>
