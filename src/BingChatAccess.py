@@ -1,56 +1,24 @@
 from EdgeGPT.EdgeGPT import Chatbot, ConversationStyle
 import json, time
-import LLMAccess, presaiUtils
+import LLMChatAccess
 
-class BingChatAccess(LLMAccess):
+class BingChatAccess(LLMChatAccess.LLMChatAcess):
 
-    def __init__(self, numberOfTries=5):
+    def __init__(self, style = ConversationStyle.creative, numberOfTries=5):
         self.numberOfTries = numberOfTries
-        self.style = ConversationStyle.creative
+        self.style = style
 
-        # I assume that Bing chat uses GPT-4
-        self.possibleModels = [["gpt-4", 4_096]]
-
-        self.chatbots = []
-
-    def chooseModel(self, convIndex, minimumTokens):
-        for model, limit in self.possibleModels:
-            tokens = presaiUtils.num_tokens_from_messages(self.convs[convIndex], model)
-            print(model + " tokens: " + str(tokens) + ", maximum " + str(limit) + " - " + str(minimumTokens))
-            if minimumTokens <= limit - tokens:
-                return model
-        return None
-
-    async def addConv(self):
-        tries = 0
-        while tries < self.numberOfTries:
-            try:
-                ## cookies = json.loads(open("cookie.json", encoding="utf-8").read())
-                self.chatbots.append(await Chatbot.create())
-                self.convs.append([])
-                return len(self.convs)-1
-            except:
-                tries+=1
-                time.sleep(1)
-        raise ConnectionError("unable to start new chat")
-
-    async def answerPrompt(self, prompt, minimumTokens, convIndex=-1, newConv=False):
-        if newConv:
-            await self.addConv()
-            convIndex = -1
-        self.convs[convIndex].append({"role": "user", "content": prompt})
-
-        model = self.chooseModel(convIndex, minimumTokens)
-
-        if model == None:
-            raise ValueError("too long chat")
-        print("BingChat: Using: " + model)
+    async def answerPrompt(self, prompt, bingChatConv):
+        if bingChatConv.isCLosed:
+            raise ConnectionError("BingChat conversation os closed")
+        
+        bingChatConv.conv.append({"role": "user", "content": prompt})
 
         tries = 0
         while True:
             try:
                 print("BingChat: Sending prompt")
-                ret = await self.chatbots[convIndex].ask(prompt=prompt, 
+                ret = await bingChatConv.chatbot.ask(prompt=prompt, 
                             conversation_style=self.style, 
                             simplify_response=True)
                 break
@@ -62,7 +30,7 @@ class BingChatAccess(LLMAccess):
                 print("BingChat: The try wasn't succesful, trying again")
                 time.sleep(1)
 
-        self.convs[convIndex].append({"role": "assistant", "content": ' '.join([ret["text"], ret["sources_text"], *ret["suggestions"]])})        
+        bingChatConv.conv.append({"role": "assistant", "content": ' '.join([ret["text"], ret["sources_text"], *ret["suggestions"]])})        
         
         return {'text' : ret['text'], 'suggestions' : ret['suggestions'], 'messages_left' : ret['messages_left'],
                 'max_messages' : ret['max_messages'], 'sources' : BingChatAccess.getSources(ret['sources'])}
@@ -77,6 +45,31 @@ class BingChatAccess(LLMAccess):
                 return ret
             ret.append(words[1])
 
-class BingChatConversation:
+class BingChatConversation(LLMChatAccess.LLMChatConversation):
        
+    async def __init__(self, numberOfTries=5, cookiesLocation = None) -> None:
+        self.conv = []
+        self.isClosed = False
+
+        tries = 0
+        while tries < numberOfTries:
+            try:
+                cookies = None
+                if cookiesLocation:
+                    cookies = json.loads(open(cookiesLocation, encoding="utf-8").read())
+
+                self.chatbot = await Chatbot.create(cookies=cookies)
+                break
+            except Exception as e:
+                print(e)
+
+                tries+=1
+                if tries >= numberOfTries:
+                    raise ConnectionError("unable to start new chat")
+                time.sleep(1)
+    
+    def close(self):
+        self.chatbot.close()
+        self.isClosed = True
+
 
