@@ -1,8 +1,12 @@
 from PyQt5.QtWidgets import QApplication, QWidget
 import sys
 import mainWindow
-import strategy
 from PyQt5.QtGui import QFont
+import importlib.util
+
+spec = importlib.util.spec_from_file_location("strategy", "strategies/outlineFirst/strategy.py")
+strategy = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(strategy)
 
 font_size = 12
 window_size = (700, 700)
@@ -17,7 +21,7 @@ window = mainWindow.mainWindow()
 window.setBaseSize(*window_size)
 
 
-strat = strategy.strategy(window)
+strat = strategy.strategy(window, "strategies/outlineFirst")
 
 def sendOutput(text):
     for k, v in text.items():

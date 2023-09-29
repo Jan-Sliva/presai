@@ -1,17 +1,19 @@
-import sys, os, random
+import sys, os, random, json
 from PyQt5 import QtCore, QtGui, QtWidgets, uic
 from PyQt5.QtCore import Qt, QEvent, QTimer, QRect
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QImage, QPen, QTabletEvent, QFont
 from selectionLayout import selectionLayout
+import os.path as P
 
 
 class strategy:
 
-    def __init__(self, mainWindow) -> None:
+    def __init__(self, mainWindow, location) -> None:
         self.mainWindow = mainWindow
+        self.location = location
 
-        with open("prompts/outline.txt", encoding="utf-8") as f:
+        with open(P.join(self.location, "prompts/outline.txt"), encoding="utf-8") as f:
             self.outlinePrompt = f.read()
         
 
