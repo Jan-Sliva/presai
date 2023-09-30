@@ -1,4 +1,4 @@
 {
-    "name" : "Outline first",
-    "path" : "strategies/outlineFirst"
+    "name" : "Bing chat - outline first",
+    "description" : "Using bing chat, fisrt create 1 - 5 outlines."
 }
