@@ -53,6 +53,7 @@ class selectionLayout(QtWidgets.QVBoxLayout):
                     selectionOutputs[item["key"]] = w.currentText
                 elif item["type"] == "textInput":
                     w = QLineEdit()
+                    w.setText(item.get("default", ""))
                     w.textChanged.connect(f)
                     selectionOutputs[item["key"]] = w.text
                 elif item["type"] == "numberInput":

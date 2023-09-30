@@ -17,7 +17,7 @@ class strategy:
             self.outlinePrompt = f.read()
         
 
-    def setFirstPromptScreen(self):
+    def begin(self, par={}):
         selectionList = [{"type" : "text", "text" : "Set parameters", "fontSize" : 15},
                          {"type" : "textInput", "key" : "top", "textBefore" : "Topic:"},
                          {"type" : "numberInput", "key" : "len", "textBefore" : "Number of slides:", "default" : 10, "min" : 3},
@@ -40,11 +40,7 @@ class strategy:
         
         layout.addStretch()
 
-        heading = QLabel("First prompt to ask:")
-        font = heading.font()
-        font.setPointSize(15)
-        heading.setFont(font)
-        layout.addWidget(heading)
+        layout.addLabel("First prompt to ask:", 15)
 
         layout.addWidget(outlineWidget)
         layout.addSelectionButton(selectionOutputs, self.predictOutlines)
